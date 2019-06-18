@@ -43,6 +43,6 @@ for i in range(M):
 
 for i in range(M):
     for j in range(N):
-        dp[i+1][j+1] = dp[i][j] + lcs[i+1][j+1] if (S[i]==T[j]) else 
+        dp[i+1][j+1] = dp[i][j] + lcs[i+1][j+1] if (S[i]==T[j])
     
 print(lcs)
