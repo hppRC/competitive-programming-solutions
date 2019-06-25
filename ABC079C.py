@@ -56,7 +56,7 @@ for i in range(3):
         operands.append("-")
     ans >>= 1
 
-for i, ope in enumerate(operands):
+for i, ope in enumerate(operands[::-1]):
     print(ABCD[i], end="")
     print(ope, end="")
 print(ABCD[3], end="")
