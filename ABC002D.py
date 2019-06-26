@@ -2,6 +2,7 @@
 from collections import defaultdict
 from collections import deque
 from heapq import heappush, heappop
+from itertools import combinations
 import sys
 import math
 import bisect
@@ -32,6 +33,35 @@ mod = 1000000007
 N, M = LI()
 xy = list(map(lambda x: [x[0]-1, x[1]-1], LIR(M)))
 
+edge = [[0]*N for i in range(N)]
+for xi, yi in xy:
+    edge[xi][yi] = edge[yi][xi] = 1
+
+ans = 1
+
+for i in range(1, 1<<N):
+    bit = i
+    group = []
+    for j in range(N):
+        if (bit & 1):
+            group.append(j)
+        bit >>= 1
+    
+    for j in range(len(group)):
+        for k in range(j+1, len(group)):
+            if (not edge[group[j]][group[k]]):
+                break
+        else:
+            continue
+        break
+    else:
+        ans = max(ans, len(group))
+
+print(ans)
+
+
+
+"""
 xtoy = [[] for i in range(N)]
 
 ans = 1
@@ -58,3 +88,4 @@ for i in range(1, 1<<N):
         ans = max(ans, len(group))
 
 print(ans)
+"""
