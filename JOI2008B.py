@@ -2,6 +2,7 @@
 from collections import defaultdict
 from collections import deque
 from heapq import heappush, heappop
+from itertools import groupby
 import sys
 import math
 import bisect
@@ -32,9 +33,24 @@ mod = 1000000007
 S = input()
 L = input()
 
+def solve(S, L):
+    ans = 0
+    for i in range(len(S)):
+        Sdash = S[i:]
+        counts = [1 if Sdash[j]==L[j] else 0 for j in range(min(len(Sdash), len(L)))]
+        ct = 0
+        for i in range(len(counts)):
+            if (counts[i]):
+                ct += 1
+            else:
+                ans = max(ans, ct)
+                ct = 0
+        ans = max(ans, ct)
+    return ans
 
+print(max(solve(S, L), solve(L, S)))
 
-
+"""
 i = 0
 j = 0
 
@@ -59,3 +75,4 @@ for i in range(len(S)):
     break
 
 print(ans)
+"""
