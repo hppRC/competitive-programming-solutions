@@ -33,4 +33,15 @@ dire8 = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
 
 N = I()
 wh = LIR(N)
+ 
+wh = sorted(wh, key=lambda x: (x[0], -x[1]))
+h = [h for _, h in wh]
+INF = max(h)+1
+dph = [INF]*(N+1)
 
+for hi in h:
+    point = bisect.bisect_left(dph, hi)
+    dph[point] = hi
+
+ans = dph[:bisect.bisect_left(dph, INF)]
+print(len(ans))
