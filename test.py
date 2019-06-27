@@ -31,11 +31,11 @@ mod = 1000000007
 dire4 = [(1,0), (0,1), (-1,0), (0,-1)]
 dire8 = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
 
-def bfs(c,sy=0, sx=0, gy=0, gx=0, blocks=['#'], dire=[(1,0), (0,1), (-1,0), (0,-1)]):
+def bfs(c,sy=0, sx=0, gy=0, gx=0, blocks=['#'], dire=[(1,0), (0,1), (-1,0), (0,-1)], return_maximum_distance=False):
     H = len(c)
     W = len(c[0])
-    maximum_distance = H*W+1
-    dist = [[maximum_distance]*W for i in range(H)]
+    distance_limit = H*W+1
+    dist = [[distance_limit]*W for i in range(H)]
 
     q = deque()
 
@@ -58,55 +58,25 @@ def bfs(c,sy=0, sx=0, gy=0, gx=0, blocks=['#'], dire=[(1,0), (0,1), (-1,0), (0,-
                 if (c[y+dy][x+dx] in blocks):
                     continue
                 else:
-                    if (y+dy==gy) and (x+dx==gx):
+                    if (y+dy==gy) and (x+dx==gx) and (not return_maximum_distance):
                         return (d+1)
                     elif (dist[y+dy][x+dx] > d+1):
                         dist[y+dy][x+dx] = d+1
                         q_append((y+dy, x+dx))
+    if (return_maximum_distance):
+        return d
     return -1
 
+H, W = LI()
+c = SR(H)
 
-def bfs_maximum_distance(c, sy=0, sx=0, blocks=["#"], dire=[(1,0), (0,1), (-1,0), (0,-1)]):
-    H = len(c)
-    W = len(c[0])
-    maximum_distance = H*W+1
-    dist = [[maximum_distance]*W for i in range(H)]
+sy = []
+sx = []
 
-    q = deque()
-    q_append = q.append
-    q_popleft = q.popleft
+for i in range(H):
+    for j in range(W):
+        if (c[i][j]=="#"):
+            sy.append(i)
+            sx.append(j)
 
-    if (type(sy)==list) or (type(sx)==list):
-        for syi, sxi in zip(sy, sx):
-            dist[syi][sxi] = 0
-            q.append((syi, sxi))
-    else:
-        dist[sy][sx] = 0
-        q.append((sy, sx))
-
-    while q:
-        y, x = q.popleft()
-        for dy, dx in dire:
-            if (y+dy<H) and (y+dy>=0) and (x+dx<W) and (x+dx>=0):
-                if (c[y+dy][x+dx] in blocks):
-                    continue
-                elif (dist[y+dy][x+dx] > dist[y][x]+1):
-                        dist[y+dy][x+dx] = dist[y][x]+1
-                        q.append((y+dy, x+dx))
-    maximum_distance = 0
-    for i in range(H):
-        for j in range(W):
-            if (dist[i][j] < 1000000007):
-                maximum_distance = max(dist[i][j], maximum_distance)
-    return maximum_distance
-
-R, C = LI()
-sy, sx = LI()
-gy, gx = LI()
-
-sy, sx = sy-1, sx-1
-gy, gx = gy-1, gx-1
-
-c = SR(R)
-
-print(bfs(c, sy, sx, gy, gx))
+print(bfs(c, sy, sx, return_maximum_distance=True))
