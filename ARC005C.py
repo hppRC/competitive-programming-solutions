@@ -1,4 +1,81 @@
-#!usr/bin/env python3
+from collections import deque
+import sys
+
+def LI(): return list(map(int, sys.stdin.readline().split()))
+def S(): return list(sys.stdin.readline())[:-1]
+
+def SR(n):
+    l = [None for i in range(n)]
+    for i in range(n):l[i] = S()
+    return l
+
+dire4 = [(1,0), (0,1), (-1,0), (0,-1)]
+
+def bfs(H, W, sy, sx, gy, gx, c):
+    if (sy, sx) == (gy, gx):
+        return 0
+    maximum_distance = H*W+1
+    dire = [(1,0), (0,1), (-1,0), (0,-1)]
+    dist = [[maximum_distance]*W for i in range(H)]
+    dist[sy][sx] = 0
+    q = deque()
+
+    q_append = q.append
+    q_appendleft = q.appendleft
+    q_popleft = q.popleft
+
+    q_append((sy, sx))
+    while q:
+        y, x = q_popleft()
+        d = dist[y][x]
+        if ((y, x) == (gy, gx)):
+            if d <= 2:
+                return d
+        for dy, dx in dire:
+            if (y+dy<H) and (y+dy>=0) and (x+dx<W) and (x+dx>=0):
+                if (c[y+dy][x+dx] == "#"):
+                    if (dist[y+dy][x+dx] > d+1):
+                        dist[y+dy][x+dx] = d+1
+                        if (dist[y+dy][x+dx] >= 3):
+                            continue
+                        q_append((y+dy, x+dx))
+                else:
+                    if (dist[y+dy][x+dx] > d):
+                        dist[y+dy][x+dx] = d
+                        q_appendleft((y+dy, x+dx))
+    return (dist[gy][gx] if (dist[gy][gx] <= 2) else -1)
+
+def main():
+    H, W = LI()
+    c = SR(H)
+
+    flag = False
+    for i in range(H):
+        for j in range(W):
+            if (c[i][j] == "s"):
+                sy, sx = i, j
+                if (flag):
+                    break
+                flag = True
+            elif (c[i][j] == "g"):
+                gy, gx = i, j
+                if (flag):
+                    break
+                flag = True
+        else:
+            continue
+        break
+
+    print("YES" if (bfs(H, W, sy, sx, gy, gx, c) != -1) else "NO")
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+"""#!usr/bin/env python3
 from collections import deque
 import sys
 
@@ -68,3 +145,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+"""
