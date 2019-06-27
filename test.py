@@ -44,3 +44,5 @@ def bfs(sy=0, sx=0, c=[['.']], gy=0, gx=0, blocks=['#'], return_maximum_distance
                             dist[y+dy][x+dx] = dist[y][x]+1
                             q.append((y+dy, x+dx))
         return -1
+
+print([[1009]*3 for i in range(10)])
