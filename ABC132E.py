@@ -36,13 +36,58 @@ uv = LIR(M)
 S, T = LI()
 S, T = S-1, T-1
 
-edge = [[0]*N for i in range(N)]
 utov = [[] for i in range(N)]
 
 for u, v in uv:
-    edge[u-1][v-1] = 1
     utov[u-1].append(v-1)
 
+
+ken1 = deque()
+ken2 = deque()
+pa = deque()
+
+ken1_used = [False]*N
+ken2_used = [False]*N
+pa_used = [False]*N
+
+pa.append(S)
+pa_used[S] = True
+
+ans = 0
+
+while ken1 or ken2 or pa:
+    ans += 1
+
+    while pa:
+        u = pa.popleft()
+        for v in utov[u]:
+            if (not ken2_used[v]):
+                ken2_used[v] = True
+                ken1.append(v)
+    
+    while ken1:
+        u = ken1.popleft()
+        for v in utov[u]:
+            if (not pa_used[v]):
+                pa_used[v] = True
+                ken2.append(v)    
+
+    while ken2:
+        u = ken2.popleft()
+        for v in utov[u]:
+            if (not ken1_used[v]):
+                if (v==T):
+                    print(ans)
+                    quit()
+                ken1_used[v] = True
+                pa.append(v)
+
+print(-1)
+
+
+
+
+"""
 kenken = []
 
 def bfs(s):
@@ -88,3 +133,4 @@ def bfs_dist(S, T):
     return -1
 
 print(bfs_dist(S, T))
+"""
