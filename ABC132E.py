@@ -53,34 +53,34 @@ pa_used = [False]*N
 pa.append(S)
 pa_used[S] = True
 
-ans = 0
+ans = -1
 
 while ken1 or ken2 or pa:
     ans += 1
 
-    while pa:
-        u = pa.popleft()
-        for v in utov[u]:
-            if (not ken2_used[v]):
-                ken2_used[v] = True
-                ken1.append(v)
-    
     while ken1:
         u = ken1.popleft()
         for v in utov[u]:
-            if (not pa_used[v]):
-                pa_used[v] = True
-                ken2.append(v)    
+            if (not ken2_used[v]):
+                ken2_used[v] = True
+                ken2.append(v)
 
     while ken2:
         u = ken2.popleft()
         for v in utov[u]:
-            if (not ken1_used[v]):
+            if (not pa_used[v]):
                 if (v==T):
                     print(ans)
                     quit()
+                pa_used[v] = True
+                pa.append(v)    
+
+    while pa:
+        u = pa.popleft()
+        for v in utov[u]:
+            if (not ken1_used[v]):
                 ken1_used[v] = True
-                pa.append(v)
+                ken1.append(v)
 
 print(-1)
 
