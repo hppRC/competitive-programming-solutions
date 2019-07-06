@@ -31,24 +31,22 @@ dire4 = [(1,0), (0,1), (-1,0), (0,-1)]
 dire8 = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
 
 N = I()
-a = LI()
+A = LI()
 
-dp = [[[-1]*(N+1) for i in range(N+1)] for j in range(N+1)]
+dp = [[[0]*(N+1) for i in range(N+1)] for j in range(N+1)]
+dp[1][0][0] = 1/N
+for i in range(N+1):
+    for j in range(N+1):
+        for k in range(N+1):
+            if (not i) and (not j) and (not k):
+                continue
+            res = 0
+            if (i>0):
+                res += i*dp[i-1][j][k]
+            if (j>0) and (i<N):
+                res += j*dp[i+1][j-1][k]
+            if (k>0) and (j<N):
+                res += k*dp[i][j+1][k-1]
+            dp[i][j][k] = res/(i+j+k)
 
-def rec(i, j, k):
-    if (dp[i][j][k] > -1):
-        return dp[i][j][k]
-    if (i==0) and (j==0) and (k==0):
-        return 0
-    res = N
-    if (i>0):
-        res += rec(i-1, j, k)*i
-    if (j>0):
-        res += rec(i+1, j-1, k)*j
-    if (k>0):
-        res += rec(i, j+1, k-1)*k
-    res /= i+j+k
-    dp[i][j][k] = res
-    return res
-
-print(rec(a.count(1), a.count(2), a.count(3)))
+print(dp[A.count(1)][A.count(2)][A.count(3)])
