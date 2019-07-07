@@ -12,9 +12,9 @@ today=$(date "+%Y年%m月%d日")
 echo "----------以下現在のファイル数----------
 ${today}現在"
 
-for x in *
-    do echo "${x}"
-    ls -1UR $x |
+for f in *
+    do echo "${f}"
+    ls -1UR $f |
     if [ ${f} != "organize.sh" ] && [ ${f} != "README.md" ] && [ ${f} != "easy.sh" ] && [ ${f} != ".gitignore" ] && [ ${f} != "count.sh" ]
         wc -l
     fi
