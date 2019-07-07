@@ -14,5 +14,7 @@ ${today}現在"
 
 for x in *
     do echo "${x}"
-    ls -1UR $x | wc -l
+    ls -1UR $x |
+    if [ ${f} != "organize.sh" ] && [ ${f} != "README.md" ] && [ ${f} != "easy.sh" ] && [ ${f} != ".gitignore" ] && [ ${f} != "count.sh" ]
+        wc -l
 done

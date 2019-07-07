@@ -8,27 +8,3 @@ organize.shは整理整頓用のスクリプトファイルです。easy.shは�
 
 ----------以下現在のファイル数----------
 2019年07月08日現在
-ABC
-     120
-AGC
-      13
-AOJ
-      17
-ARC
-      20
-ATC
-       5
-EDPC
-      15
-JOI
-       4
-Others
-      15
-README.md
-       1
-count.sh
-       1
-easy.sh
-       1
-organize.sh
-       1
