@@ -1,20 +1,13 @@
-def solve(N, ab):
-    imos = [1]*(N+2)
-    for a, b in ab:
-        for i in range(a,min(b+1,N+2)):
-            imos[i] += 1
-    ret = 1
-    for i, a in enumerate(imos):
-        if (a>i):
-            ret = max(ret, i)
-    return ret-1
-
-
 def main():
     N = int(input())
     ab = [list(map(int, input().split())) for i in range(N)]
-    print(solve(N, ab))
+
+    imos = [0]*(N+2)
+    for a, b in ab:
+        imos[a] += 1
+        imos[min(b,N+1)] -= 1
+    for i in range(N+1):
+        imos[i+1] += imos[i]
+    print(imos)
 
 main()
-
-        
