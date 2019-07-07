@@ -13,9 +13,9 @@ echo "----------以下現在のファイル数----------
 ${today}現在"
 
 for f in *
-    do echo "${f}"
-    ls -1UR $f |
+do
     if [ ${f} != "organize.sh" ] && [ ${f} != "README.md" ] && [ ${f} != "easy.sh" ] && [ ${f} != ".gitignore" ] && [ ${f} != "count.sh" ]
-        wc -l
+        then echo "${f}"
+        ls -1UR $f |wc -l
     fi
 done
