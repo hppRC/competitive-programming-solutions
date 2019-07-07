@@ -17,4 +17,5 @@ for x in *
     ls -1UR $x |
     if [ ${f} != "organize.sh" ] && [ ${f} != "README.md" ] && [ ${f} != "easy.sh" ] && [ ${f} != ".gitignore" ] && [ ${f} != "count.sh" ]
         wc -l
+    fi
 done
