@@ -8,7 +8,7 @@ AtCoderの問題を解いた際のプログラムです。
 
 organize.shは整理整頓用のスクリプトファイルです。easy.shはソースコードを楽にgit pushしたいがためのファイルになっています。
 "
-today=$(date "+%Y%m%d")
+today=$(date "+%Y年%m月%d日")
 echo "----------以下現在のファイル数----------
 ${today}現在"
 
