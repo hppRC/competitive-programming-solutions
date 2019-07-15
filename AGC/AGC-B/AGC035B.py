@@ -30,11 +30,12 @@ mod = 1000000007
 dire4 = [(1,0), (0,1), (-1,0), (0,-1)]
 dire8 = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
 
-N = I()
-a = LI()
+N, M = LI()
+AB = LIR(M)
 
-ret = 0
-for ai in a[1:]:
-    ret ^= ai
+utov = [[] for i in range(M+1)]
+for A, B in AB:
+    utov[A].append(B)
+    utov[B].append(A)
 
-print("Yes" if (ret==a[0]) else "No")
+

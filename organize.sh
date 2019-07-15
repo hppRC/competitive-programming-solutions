@@ -10,7 +10,7 @@ for f in *
             then mv ${f} ./${f:0:3}/ || mkdir ${f:0:3}; mv ${f} ./${f:0:3}/
         elif [ ${f:0:4} = 'EDPC' ]
             then mv ${f} ./${f:0:4}/ || mkdir ${f:0:4}; mv ${f} ./${f:0:4}/
-        elif [ ${f} != "organize.sh" ] && [ ${f} != "README.md" ] && [ ${f} != "easy.sh" ] && [ ${f} != ".gitignore" ] && [ ${f} != "count.sh" ]
+        elif [ ${f} != "organize.sh" ] && [ ${f} != "README.md" ] && [ ${f} != "easy.sh" ] && [ ${f} != ".gitignore" ] && [ ${f} != "count.sh" ] && [ ${f} != "setup.sh" ]
             then mv ${f} ./Others/ || mkdir Others; mv ${f} ./Others/
         fi
     done
