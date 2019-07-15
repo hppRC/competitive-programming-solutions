@@ -19,7 +19,7 @@ ${today}現在
 
 for f in *
 do
-    if [ ${f} != "organize.sh" ] && [ ${f} != "README.md" ] && [ ${f} != "easy.sh" ] && [ ${f} != ".gitignore" ] && [ ${f} != "count.sh" ]
+    if [ ${f} != "README.md" ] && [ ${f} != ".gitignore" ]
         then echo "${f}"
         ls -1UR $f |wc -l
         echo "    "
