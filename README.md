@@ -13,7 +13,7 @@ organize.shは整理整頓用のスクリプトファイルです。easy.shは�
 
 
 ABC
-     120
+     121
     
 AGC
       25
@@ -35,4 +35,7 @@ JOI
     
 Others
       15
+    
+utility
+       2
     
