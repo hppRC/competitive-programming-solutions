@@ -36,7 +36,7 @@ ret = [i for i in range(10)]
 if len(S)==3:
     for i in range(3):
         if (S[-i-1]=="?"):
-            
+
 elif len(S)==2:
 
 elif len(S==1:
