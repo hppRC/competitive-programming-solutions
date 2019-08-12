@@ -1,6 +1,0 @@
-[package]
-name = "AtCoder"
-version = "0.1.0"
-authors = ["hppRC <hpp.ricecake@gmail.com>"]
-
-[dependencies]
