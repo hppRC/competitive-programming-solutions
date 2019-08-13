@@ -48,69 +48,20 @@ macro_rules! read_value {
          $next().parse::<$t>().expect("Parse error")
     };
 }
-
 #[allow(dead_code)]
-const MOD: u64 = 1000000007;
+const INF: u64 = 1000000007;
 
-
-#[derive(Debug)]
-struct FactInv {
-    fact: Vec<u64>,
-    inv: Vec<u64>,
-    factinv: Vec<u64>,
-    m: u64,
-}
-#[allow(dead_code)]
-impl FactInv {
-    fn new(n: u64, m: u64) -> Self {
-        let mut fact = vec![0; n as usize + 1];
-        fact[0] = 1;
-        for i in 1..n+1 {
-            fact[i as usize] = i * &fact[i as usize - 1] % m;
-        }
-        let mut inv = vec![0; n as usize + 1];
-        inv[0] = 0;
-        inv[1] = 1;
-        for i in 2..n+1 {
-            inv[i as usize] = inv[(m % i) as usize] * (m - m / i) % m;
-        }
-        let mut factinv = vec![0; n as usize + 1];
-        factinv[0] = 1;
-        for i in 1..n+1 {
-            factinv[i as usize] = factinv[i as usize - 1] * inv[i as usize] % m;
-        }
-        FactInv {
-            fact: fact,
-            inv: inv,
-            factinv: factinv,
-            m: m,
-        }
-    }
-    fn comb(&self, n: u64, r: u64) -> u64 {
-        if n < r {
-            0
-        } else {
-            (self.fact[n as usize] * self.factinv[r as usize] % self.m) * self.factinv[(n-r) as usize] % self.m
-        }
-    }
-}
-
-fn extgcd(a: i64, b: i64) -> (i64, i64, i64) {
-    if b == 0 {
-        (a, 1, 0)
-    } else {
-        let (gcd, x, y) = extgcd(b, a % b);
-        (gcd, y, x - (a / b) * y)
-    }
-}
-
-fn mod_inv(a: u64, m: u64) -> u64 {
-    let (_, x, _) = extgcd(a as i64, m as i64);
-    (m as i64 + x) as u64 % m
-}
 
 fn main() {
-    let fi = FactInv::new(13, 13);
-    println!("{:?}", fi);
-    println!("{}", mod_inv(5, 13));
+    input!{
+        v: [usize; 3]
+    }
+    let mut v = v;
+    v.sort();
+
+    println!("{}", if v[0]==5 && v[1]==5 && v[2]==7 {
+        "YES"
+    } else {
+        "NO"
+    });
 }
