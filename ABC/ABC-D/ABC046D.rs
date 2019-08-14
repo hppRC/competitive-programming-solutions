@@ -60,7 +60,9 @@ fn to_num(c: char) -> i64 {
 
 
 fn main() {
-    let v = vec![0, 0, 0, 0];
-
-    println!("{:?}", v.into_iter());
+    input!{
+        s: chars
+    }
+    let P = s.iter().fold(0, |acc, &c| acc + if c=='p' {1} else {0});
+    println!("{}", s.len() / 2 - P) ;
 }

@@ -60,7 +60,12 @@ fn to_num(c: char) -> i64 {
 
 
 fn main() {
-    let v = vec![0, 0, 0, 0];
-
-    println!("{:?}", v.into_iter());
+    input!{
+        a: isize, b: isize, c: isize
+    }
+    let mut hash = HashMap::new();
+    *hash.entry(a).or_insert(0) += 1;
+    *hash.entry(b).or_insert(0) += 1;
+    *hash.entry(c).or_insert(0) += 1;
+    println!("{}", hash.len());
 }

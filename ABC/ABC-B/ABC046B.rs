@@ -60,7 +60,14 @@ fn to_num(c: char) -> i64 {
 
 
 fn main() {
-    let v = vec![0, 0, 0, 0];
+    input!{
+        N: isize, K: isize,
+    }
 
-    println!("{:?}", v.into_iter());
+    let mut ans = K;
+    for _ in 1..N {
+        ans *= K - 1;
+    }
+
+    println!("{}", ans);
 }

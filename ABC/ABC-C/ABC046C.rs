@@ -60,7 +60,18 @@ fn to_num(c: char) -> i64 {
 
 
 fn main() {
-    let v = vec![0, 0, 0, 0];
+    input!{
+        N: usize,
+        TA: [(usize, usize); N]
+    }
+    let mut L = 1;
+    let mut R = 1;
 
-    println!("{:?}", v.into_iter());
+    for (T, A) in TA {
+        let n = max((L - 1) / T + 1 , (R - 1) / A + 1);
+        L = n * T;
+        R = n * A;
+    }
+
+    println!("{}", L+R);
 }
