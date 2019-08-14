@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 #[allow(unused_imports)]
+use std::io::{self, Write};
+#[allow(unused_imports)]
 use std::collections::{BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet, VecDeque};
 #[allow(unused_imports)]
 use std::cmp::{max, min, Ordering};
@@ -52,28 +54,36 @@ macro_rules! read_value {
 #[allow(dead_code)]
 const MOD: u64 = 1000000007;
 
+#[allow(dead_code)]
+fn to_num(c: char) -> i64 {
+    c as i64 - 48
+}
 
 fn main() {
     input!{
-        N: usize, A: i64,
-        X: [i64; N]
+        S: chars
     }
-    let Y = X.into_iter().map(|x| x - A).collect::<Vec<i64>>();
-    let mut dp: Vec<Vec<i64>> = vec![vec![0; 5001]; N+1];
+    let mut ans = 0;
 
-    dp[0][2500] = 1;
-
-    for i in 1..N+1 {
-        let yi = Y[i-1];
-        for j in 0..(5001 as usize) {
-            let sum = j as i64 - yi;
-            if sum < 0 || sum > 5000 {
-                dp[i][j] += dp[i-1][j]
-            } else if sum >= 0 && sum <= 5000 {
-                dp[i][j] += dp[i-1][j] + dp[i-1][sum as usize];
+    for i in 0..(1 << (S.len()-1)) {
+        let mut bit = i;
+        let mut ret = to_num(S[0]);
+        let mut ord = 1;
+        for _ in 1..S.len() {
+            if bit & 1 == 1 {
+                ans += ret;
+                ret = to_num(S[ord]);
+                bit >>= 1;
+                ord += 1;
+            } else {
+                ret *= 10;
+                ret += to_num(S[ord]);
+                bit >>= 1;
+                ord += 1;
             }
         }
+        ans += ret;
     }
-    println!("{}", dp[N][2500] - 1);
 
+    println!("{}", ans);
 }

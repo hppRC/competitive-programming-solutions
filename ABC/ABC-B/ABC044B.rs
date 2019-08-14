@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 #[allow(unused_imports)]
+use std::io::{self, Write};
+#[allow(unused_imports)]
 use std::collections::{BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet, VecDeque};
 #[allow(unused_imports)]
 use std::cmp::{max, min, Ordering};
@@ -55,17 +57,42 @@ const MOD: u64 = 1000000007;
 
 fn main() {
     input!{
-        w: chars,
+        Sa: chars,
+        Sb: chars,
+        Sc: chars
     }
+    let mut turn: usize = 0;
+    let mut a: usize = 0;
+    let mut b: usize = 0;
+    let mut c: usize = 0;
+    let winner;
 
-    let mut hash = HashMap::new();
-
-    for ch in w {
-        let val = hash.get(&ch).unwrap_or(&0)+1;
-        hash.insert(ch, val);
+    loop {
+        if turn == 0 {
+            if a >= Sa.len() {
+                winner = 0;
+                break;
+            }
+            let ch = Sa[a];
+            turn = if ch == 'a' { 0 } else if ch == 'b' { 1 } else { 2 };
+            a += 1;
+        } else if turn == 1 {
+            if b >= Sb.len() {
+                winner = 1;
+                break;
+            }
+            let ch = Sb[b];
+            turn = if ch == 'a' { 0 } else if ch == 'b' { 1 } else { 2 };
+            b += 1;
+        } else if turn == 2 {
+            if c >= Sc.len() {
+                winner = 2;
+                break;
+            }
+            let ch = Sc[c];
+            turn = if ch == 'a' { 0 } else if ch == 'b' { 1 } else { 2 };
+            c += 1;
+        }
     }
-
-    let ans = hash.into_iter().fold(true, |acc, (_, v)| acc && (v % 2 == 0));
-
-    println!("{}", if ans { "Yes" } else { "No" });
+    println!("{}", if winner == 0 { 'A' } else if winner == 1 { 'B' } else { 'C' });
 }

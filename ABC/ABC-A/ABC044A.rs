@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 #[allow(unused_imports)]
+use std::io::{self, Write};
+#[allow(unused_imports)]
 use std::collections::{BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet, VecDeque};
 #[allow(unused_imports)]
 use std::cmp::{max, min, Ordering};
@@ -55,9 +57,7 @@ const MOD: u64 = 1000000007;
 
 fn main() {
     input!{
-        N: isize, K: isize,
-        X: isize, Y: isize,
+        a: f64, b: f64, h: f64,
     }
-
-    println!("{}", min(N ,K) * X + max(0, (N - K)) * Y);
+    println!("{}", (a+b)*h/2.0);
 }

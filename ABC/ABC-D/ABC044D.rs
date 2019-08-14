@@ -46,6 +46,9 @@ macro_rules! read_value {
     ($next:expr, usize1) => {
         read_value!($next, usize) - 1
      };
+    ($next:expr, isize1) => {
+        read_value!($next, isize) - 1
+     };
      ($next:expr, $t:ty) => {
          $next().parse::<$t>().expect("Parse error")
     };
@@ -53,54 +56,36 @@ macro_rules! read_value {
 
 #[allow(dead_code)]
 const MOD: u64 = 1000000007;
-
-fn digit_sum(n: i64, b: i64) -> i64 {
-    if n < b {
-        n
-    } else {
-        digit_sum((n as f64/b as f64).floor() as i64, b) + (n % b)
-    }
+#[allow(dead_code)]
+fn to_num(c: char) -> i64 {
+    c as i64 - 48
 }
 
 
 fn main() {
     input!{
-        n: usize,
-        s: usize,
+        H: isize, W: isize, N: usize,
+        ab: [(isize1, isize1); N],
     }
+    let mut hash = HashMap::new();
 
-    let ce = (n as f64).sqrt().ceil() as usize;
-
-    if n == s {
-        println!("{}", n+1);
-    } else if n < s {
-        println!("-1");
-    } else {
-
-        let mut ans: i64 = -1;
-
-        for p in (1..ce+1).rev() {
-            if (n - s) % p != 0 {
-                continue;
-            }
-            let b = (n - s) / p + 1;
-            if digit_sum(n as i64, b as i64) == s as i64 {
-                ans = b as i64;
-                break;
+    for (a, b) in ab {
+        for y in 0..3 {
+            for x in 0..3 {
+                if a - y >= 0 && b - x >= 0 && a - y + 2 < H && b - x + 2 < W {
+                    *hash.entry((a - y, b - x)).or_insert(0) += 1;
+                }
             }
         }
-
-        for b in 2..ce+1 {
-            let ret = digit_sum(n as i64, b as i64);
-            if ret == s as i64 {
-                ans = b as i64;
-                break;
-            }
-        }
-
-        println!("{}", ans);
-
     }
 
+    let mut count = vec![0; 10];
+    for (_, v) in hash {
+        count[v] += 1;
+    }
+    count[0] = (H - 2) * (W - 2) - count.iter().sum::<isize>();
 
+    for i in 0..10 {
+        println!("{}", count[i]);
+    }
 }
