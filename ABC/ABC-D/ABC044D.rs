@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 #[allow(unused_imports)]
+use std::io::{self, Write};
+#[allow(unused_imports)]
 use std::collections::{BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet, VecDeque};
 #[allow(unused_imports)]
 use std::cmp::{max, min, Ordering};
@@ -52,51 +54,53 @@ macro_rules! read_value {
 #[allow(dead_code)]
 const MOD: u64 = 1000000007;
 
-#[derive(Debug)]
-struct FactInv {
-    fact: Vec<u64>,
-    inv: Vec<u64>,
-    factinv: Vec<u64>,
-    m: u64,
-}
-#[allow(dead_code)]
-impl FactInv {
-    fn new(n: u64, m: u64) -> Self {
-        let mut fact = vec![0; n as usize + 1];
-        fact[0] = 1;
-        for i in 1..n+1 {
-            fact[i as usize] = i * &fact[i as usize - 1] % m;
-        }
-        let mut inv = vec![0; n as usize + 1];
-        inv[0] = 0;
-        inv[1] = 1;
-        for i in 2..n+1 {
-            inv[i as usize] = inv[(m % i) as usize] * (m - m / i) % m;
-        }
-        let mut factinv = vec![0; n as usize + 1];
-        factinv[0] = 1;
-        for i in 1..n+1 {
-            factinv[i as usize] = factinv[i as usize - 1] * inv[i as usize] % m;
-        }
-        FactInv {
-            fact: fact,
-            inv: inv,
-            factinv: factinv,
-            m: m,
-        }
-    }
-    fn comb(&self, n: u64, r: u64) -> u64 {
-        if n < r {
-            0
-        } else {
-            (self.fact[n as usize] * self.factinv[r as usize] % self.m) * self.factinv[(n-r) as usize] % self.m
-        }
+fn digit_sum(n: i64, b: i64) -> i64 {
+    if n < b {
+        n
+    } else {
+        digit_sum((n as f64/b as f64).floor() as i64, b) + (n % b)
     }
 }
 
 
 fn main() {
     input!{
-        N
+        n: usize,
+        s: usize,
     }
+
+    let ce = (n as f64).sqrt().ceil() as usize;
+
+    if n == s {
+        println!("{}", n+1);
+    } else if n < s {
+        println!("-1");
+    } else {
+
+        let mut ans: i64 = -1;
+
+        for p in (1..ce+1).rev() {
+            if (n - s) % p != 0 {
+                continue;
+            }
+            let b = (n - s) / p + 1;
+            if digit_sum(n as i64, b as i64) == s as i64 {
+                ans = b as i64;
+                break;
+            }
+        }
+
+        for b in 2..ce+1 {
+            let ret = digit_sum(n as i64, b as i64);
+            if ret == s as i64 {
+                ans = b as i64;
+                break;
+            }
+        }
+
+        println!("{}", ans);
+
+    }
+
+
 }
