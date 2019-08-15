@@ -50,31 +50,7 @@ macro_rules! read_value {
          $next().parse::<$t>().expect("Parse error")
     };
 }
-macro_rules! debug {
-    ($($a:expr),*) => {
-        eprintln!(concat!($(stringify!($a), " = {:?}, "),*), $($a),*);
-    }
-}
-#[derive(PartialEq, PartialOrd, Clone, Debug)]
-pub struct Total<T>(pub T);
-impl<T: PartialEq> Eq for Total<T> {}
-impl<T: PartialOrd> Ord for Total<T> {
-    fn cmp(&self, other: &Total<T>) -> Ordering {
-        self.0.partial_cmp(&other.0).unwrap()
-    }
-}
-#[derive(Eq, PartialEq, Clone, Debug)]
-pub struct Rev<T>(pub T);
-impl<T: PartialOrd> PartialOrd for Rev<T> {
-    fn partial_cmp(&self, other: &Rev<T>) -> Option<Ordering> {
-        other.0.partial_cmp(&self.0)
-    }
-}
-impl<T: Ord> Ord for Rev<T> {
-    fn cmp(&self, other: &Rev<T>) -> Ordering {
-        other.0.cmp(&self.0)
-    }
-}
+
 #[allow(dead_code)]
 const MOD: u64 = 1000000007;
 #[allow(dead_code)]
@@ -84,5 +60,46 @@ fn to_num(c: char) -> i64 {
 
 
 fn main() {
+    input!{
+        K: usize,
+        S: chars
+    }
+    //direは[y, x]形式, U, R, D, Lの順
+    let dire = [(1, 0), (0, 1), (-1, 0), (0, -1)];
+    let mut hash = HashMap::new();
 
+    hash.insert((0, 0), dire);
+    let mut x = 0;
+    let mut y = 0;
+
+    for c in S {
+        let to = match c {
+            'U' => 0,
+            'R' => 1,
+            'D' => 2,
+            'L' => 3,
+            _ => unreachable!(),
+        };
+        let prevy = y;
+        let prevx = x;
+
+        while let Some(v) = hash.get(&(y, x)) {
+            y = v[to].0;
+            x = v[to].1;
+        }
+
+        if let Some(v) = hash.get_mut(&(prevy, prevx)) {
+            v[to] = (y, x);
+        }
+        //(x, y)の上下左右方向に一つずつ見ていって各方向に辺を張る
+        //hashの中にすでにある点が存在していたら既到達点なので(x,y)からその点までの直線移動時と同じ方向に結びつく
+        //存在していなければ未到達点なのでその点を結びつける
+        let u = if let Some(v) = hash.get(&(y + 1, x)) { v[0] } else { (y + 1, x) };
+        let r = if let Some(v) = hash.get(&(y, x + 1)) { v[1] } else { (y, x + 1) };
+        let d = if let Some(v) = hash.get(&(y - 1, x)) { v[2] } else { (y - 1, x) };
+        let l = if let Some(v) = hash.get(&(y, x - 1)) { v[3] } else { (y, x - 1) };
+
+        hash.insert((y, x), [u, r, d, l]);
+    }
+    println!("{} {}", x, y);
 }

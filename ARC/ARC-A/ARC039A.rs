@@ -50,31 +50,7 @@ macro_rules! read_value {
          $next().parse::<$t>().expect("Parse error")
     };
 }
-macro_rules! debug {
-    ($($a:expr),*) => {
-        eprintln!(concat!($(stringify!($a), " = {:?}, "),*), $($a),*);
-    }
-}
-#[derive(PartialEq, PartialOrd, Clone, Debug)]
-pub struct Total<T>(pub T);
-impl<T: PartialEq> Eq for Total<T> {}
-impl<T: PartialOrd> Ord for Total<T> {
-    fn cmp(&self, other: &Total<T>) -> Ordering {
-        self.0.partial_cmp(&other.0).unwrap()
-    }
-}
-#[derive(Eq, PartialEq, Clone, Debug)]
-pub struct Rev<T>(pub T);
-impl<T: PartialOrd> PartialOrd for Rev<T> {
-    fn partial_cmp(&self, other: &Rev<T>) -> Option<Ordering> {
-        other.0.partial_cmp(&self.0)
-    }
-}
-impl<T: Ord> Ord for Rev<T> {
-    fn cmp(&self, other: &Rev<T>) -> Ordering {
-        other.0.cmp(&self.0)
-    }
-}
+
 #[allow(dead_code)]
 const MOD: u64 = 1000000007;
 #[allow(dead_code)]
@@ -84,5 +60,38 @@ fn to_num(c: char) -> i64 {
 
 
 fn main() {
+    input!{
+        A: chars, B: chars,
+    }
+    let mut A = A;
+    let mut B = B;
+    let mut ans = 0;
 
+    for j in 1..3 {
+        for i in 0..10 {
+            A[j] = std::char::from_digit(i as u32, 10).unwrap();
+            let a  = A.into_iter().collect::<String>().parse().unwrap();
+            let b  = B.into_iter().collect::<String>().parse().unwrap();
+            ans = max(ans, a - b);
+        }
+        for i in 0..10 {
+            B[j] = std::char::from_digit(i as u32, 10).unwrap();
+            let a  = A.into_iter().collect::<String>().parse().unwrap();
+            let b  = B.into_iter().collect::<String>().parse().unwrap();
+            ans = max(ans, a - b);
+        }
+    }
+    for i in 1..10 {
+        A[0] = std::char::from_digit(i as u32, 10).unwrap();
+        let a  = A.into_iter().collect::<String>().parse().unwrap();
+        let b  = B.into_iter().collect::<String>().parse().unwrap();
+        ans = max(ans, a - b);
+    }
+    for i in 1..10 {
+        B[0] =  std::char::from_digit(i as u32, 10).unwrap();
+        let a  = A.into_iter().collect::<String>().parse().unwrap();
+        let b  = B.into_iter().collect::<String>().parse().unwrap();
+        ans = max(ans, a - b);
+    }
+    println!("{}", ans);
 }

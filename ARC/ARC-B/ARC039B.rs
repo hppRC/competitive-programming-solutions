@@ -50,31 +50,7 @@ macro_rules! read_value {
          $next().parse::<$t>().expect("Parse error")
     };
 }
-macro_rules! debug {
-    ($($a:expr),*) => {
-        eprintln!(concat!($(stringify!($a), " = {:?}, "),*), $($a),*);
-    }
-}
-#[derive(PartialEq, PartialOrd, Clone, Debug)]
-pub struct Total<T>(pub T);
-impl<T: PartialEq> Eq for Total<T> {}
-impl<T: PartialOrd> Ord for Total<T> {
-    fn cmp(&self, other: &Total<T>) -> Ordering {
-        self.0.partial_cmp(&other.0).unwrap()
-    }
-}
-#[derive(Eq, PartialEq, Clone, Debug)]
-pub struct Rev<T>(pub T);
-impl<T: PartialOrd> PartialOrd for Rev<T> {
-    fn partial_cmp(&self, other: &Rev<T>) -> Option<Ordering> {
-        other.0.partial_cmp(&self.0)
-    }
-}
-impl<T: Ord> Ord for Rev<T> {
-    fn cmp(&self, other: &Rev<T>) -> Ordering {
-        other.0.cmp(&self.0)
-    }
-}
+
 #[allow(dead_code)]
 const MOD: u64 = 1000000007;
 #[allow(dead_code)]
@@ -82,7 +58,62 @@ fn to_num(c: char) -> i64 {
     c as i64 - 48
 }
 
+#[derive(Debug)]
+struct FactInv {
+    fact: Vec<u64>,
+    inv: Vec<u64>,
+    factinv: Vec<u64>,
+    m: u64,
+}
+#[allow(dead_code)]
+impl FactInv {
+    fn new(n: u64, m: u64) -> Self {
+        let mut fact = vec![0; n as usize + 1];
+        fact[0] = 1;
+        for i in 1..n+1 {
+            fact[i as usize] = i * &fact[i as usize - 1] % m;
+        }
+        let mut inv = vec![0; n as usize + 1];
+        inv[0] = 0;
+        inv[1] = 1;
+        for i in 2..n+1 {
+            inv[i as usize] = inv[(m % i) as usize] * (m - m / i) % m;
+        }
+        let mut factinv = vec![0; n as usize + 1];
+        factinv[0] = 1;
+        for i in 1..n+1 {
+            factinv[i as usize] = factinv[i as usize - 1] * inv[i as usize] % m;
+        }
+        FactInv {
+            fact: fact,
+            inv: inv,
+            factinv: factinv,
+            m: m,
+        }
+    }
+    fn comb(&self, n: u64, r: u64) -> u64 {
+        if n < r {
+            0
+        } else {
+            (self.fact[n as usize] * self.factinv[r as usize] % self.m) * self.factinv[(n-r) as usize] % self.m
+        }
+    }
+}
+
 
 fn main() {
+    input!{
+        N: u64, K: u64,
+    }
+    let ans;
 
+    let facti = FactInv::new(600, MOD);
+
+    if N <= K {
+        let res = K % N;
+        ans = facti.comb(N, res);
+    } else {
+        ans = facti.comb(N - 1 + K, N - 1);
+    }
+    println!("{}", ans);
 }
