@@ -45,13 +45,13 @@ macro_rules! read_value {
     };
     ($next:expr, char) => {
         read_value!($next, String).chars().collect::<Vec<char>>()[0]
-     };
+    };
     ($next:expr, usize1) => {
         read_value!($next, usize) - 1
      };
     ($next:expr, isize1) => {
         read_value!($next, isize) - 1
-    };
+     };
      ($next:expr, $t:ty) => {
          $next().parse::<$t>().expect("Parse error")
     };
@@ -61,6 +61,7 @@ macro_rules! debug {
         eprintln!(concat!($(stringify!($a), " = {:?}, "),*), $($a),*);
     }
 }
+
 #[allow(dead_code)]
 const MOD: u64 = 1000000007;
 #[allow(dead_code)]
@@ -70,29 +71,12 @@ fn to_num(c: char) -> i64 {
 
 
 fn main() {
-    input!{
-        S: String
+    input! {
+        c: char
     }
-    let patterns = vec!["maerd", "remaerd", "esare", "resare"];
-    let rev: String = S.chars().rev().collect();
-
-    let mut ans = true;
-    let mut i = 0;
-    while i < rev.len() {
-        let mut flag = false;
-        for &p in patterns.iter() {
-            if i + p.len() <= rev.len() && p == &rev[i..i + p.len()] {
-                i += p.len();
-                flag = true;
-                break;
-            }
-        }
-        if !flag {
-            ans = false;
-            break;
-        }
-    }
-
-
-    println!("{}", if ans { "YES" } else { "NO" });
+    let ans = match c  {
+        'a' | 'i' | 'u' | 'e' | 'o' => "vowel",
+        _ => "consonant",
+    };
+    println!("{}", ans);
 }

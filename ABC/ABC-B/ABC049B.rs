@@ -71,28 +71,11 @@ fn to_num(c: char) -> i64 {
 
 fn main() {
     input!{
-        S: String
+        H: usize, W: usize,
+        C: [String; H],
     }
-    let patterns = vec!["maerd", "remaerd", "esare", "resare"];
-    let rev: String = S.chars().rev().collect();
-
-    let mut ans = true;
-    let mut i = 0;
-    while i < rev.len() {
-        let mut flag = false;
-        for &p in patterns.iter() {
-            if i + p.len() <= rev.len() && p == &rev[i..i + p.len()] {
-                i += p.len();
-                flag = true;
-                break;
-            }
-        }
-        if !flag {
-            ans = false;
-            break;
-        }
+    for s in C {
+        println!("{}", s);
+        println!("{}", s);
     }
-
-
-    println!("{}", if ans { "YES" } else { "NO" });
 }
