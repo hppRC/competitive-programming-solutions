@@ -46,3 +46,6 @@ impl UnionFind {
     }
 }
 
+fn main() {
+    
+}
