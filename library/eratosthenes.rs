@@ -63,6 +63,15 @@ impl Eratosthenes {
     }
 }
 
-fn main() {
+macro_rules! debug {
+    ($($a:expr),*) => {
+        println!(concat!($(stringify!($a), " = {:?}, "),*), $($a),*);
+    }
+}
 
+fn main() {
+    let otogibara = Eratosthenes::new(200);
+    debug!(otogibara);
+    debug!(otogibara.is_prime(101));
+    debug!(otogibara.factorization(5376));
 }

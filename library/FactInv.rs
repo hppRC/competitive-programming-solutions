@@ -50,6 +50,7 @@ macro_rules! debug {
 
 fn main () {
     let fi = FactInv::new(10, MOD);
-
     debug!(fi);
+    debug!(fi.comb(5, 3));
+    debug!(fi.comb(10, 10));
 }
