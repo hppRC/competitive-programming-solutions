@@ -61,26 +61,6 @@ macro_rules! debug {
         println!(concat!($(stringify!($a), " = {:?}, "),*), $($a),*);
     }
 }
-#[derive(Eq, PartialEq, Clone, Debug)]
-pub struct Rev<T>(pub T);
-impl<T: PartialOrd> PartialOrd for Rev<T> {
-    fn partial_cmp(&self, other: &Rev<T>) -> Option<Ordering> {
-        other.0.partial_cmp(&self.0)
-    }
-}
-impl<T: Ord> Ord for Rev<T> {
-    fn cmp(&self, other: &Rev<T>) -> Ordering {
-        other.0.cmp(&self.0)
-    }
-}
-#[derive(PartialEq, PartialOrd, Clone, Debug)]
-pub struct Total<T>(pub T);
-impl<T: PartialEq> Eq for Total<T> {}
-impl<T: PartialOrd> Ord for Total<T> {
-    fn cmp(&self, other: &Total<T>) -> Ordering {
-        self.0.partial_cmp(&other.0).unwrap()
-    }
-}
 #[allow(dead_code)]
 const MOD: usize = 1000000007;
 #[allow(dead_code)]
@@ -88,53 +68,7 @@ fn to_num(c: char) -> i64 {
     c as i64 - 48
 }
 
-macro_rules! printvec {
-    ( $item:expr ) => {
-        for &i in &$item {
-            print!("{} ", i);
-        }
-        println!("");
-    }
-}
-
-
 
 fn main() {
-    input!{
-        N: usize, Q: usize,
-        ab: [(usize1, usize1); N-1],
-        px: [(usize1, usize); Q],
-    }
-
-    let mut tree: Vec<usize> = vec![0; N];
-    for &(p, x) in &px {
-        tree[p] += x;
-    }
-
-    let mut g: Vec<Vec<usize>> = vec![vec![]; N];
-    for &(a, b) in &ab {
-        g[a].push(b);
-        g[b].push(a);
-    }
-
-    let mut q = vec![];
-    let mut visited: Vec<bool> = vec![false; N];
-    q.push(0);
-    visited[0] = true;
-
-    while !q.is_empty() {
-        let u = q.pop().unwrap();
-        for &v in &g[u] {
-            if !visited[v] {
-                visited[v] = true;
-                tree[v] += tree[u];
-                q.push(v);
-            }
-        }
-    }
-
-    printvec!(tree);
-
-
+    println!("{}", 1.0f64 / 10f64);
 }
-

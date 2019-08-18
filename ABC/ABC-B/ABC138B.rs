@@ -61,6 +61,26 @@ macro_rules! debug {
         println!(concat!($(stringify!($a), " = {:?}, "),*), $($a),*);
     }
 }
+#[derive(Eq, PartialEq, Clone, Debug)]
+pub struct Rev<T>(pub T);
+impl<T: PartialOrd> PartialOrd for Rev<T> {
+    fn partial_cmp(&self, other: &Rev<T>) -> Option<Ordering> {
+        other.0.partial_cmp(&self.0)
+    }
+}
+impl<T: Ord> Ord for Rev<T> {
+    fn cmp(&self, other: &Rev<T>) -> Ordering {
+        other.0.cmp(&self.0)
+    }
+}
+#[derive(PartialEq, PartialOrd, Clone, Debug)]
+pub struct Total<T>(pub T);
+impl<T: PartialEq> Eq for Total<T> {}
+impl<T: PartialOrd> Ord for Total<T> {
+    fn cmp(&self, other: &Total<T>) -> Ordering {
+        self.0.partial_cmp(&other.0).unwrap()
+    }
+}
 #[allow(dead_code)]
 const MOD: usize = 1000000007;
 #[allow(dead_code)]
@@ -74,5 +94,5 @@ fn main() {
         N: usize,
         A: [f64; N],
     }
-    println!("{}", A.into_iter().fold(0, |acc, a| acc + a));
+    println!("{}", 1f64 / A.into_iter().fold(0f64, |acc, a| acc + 1f64 / a));
 }

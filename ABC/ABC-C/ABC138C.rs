@@ -61,6 +61,26 @@ macro_rules! debug {
         println!(concat!($(stringify!($a), " = {:?}, "),*), $($a),*);
     }
 }
+#[derive(Eq, PartialEq, Clone, Debug)]
+pub struct Rev<T>(pub T);
+impl<T: PartialOrd> PartialOrd for Rev<T> {
+    fn partial_cmp(&self, other: &Rev<T>) -> Option<Ordering> {
+        other.0.partial_cmp(&self.0)
+    }
+}
+impl<T: Ord> Ord for Rev<T> {
+    fn cmp(&self, other: &Rev<T>) -> Ordering {
+        other.0.cmp(&self.0)
+    }
+}
+#[derive(PartialEq, PartialOrd, Clone, Debug)]
+pub struct Total<T>(pub T);
+impl<T: PartialEq> Eq for Total<T> {}
+impl<T: PartialOrd> Ord for Total<T> {
+    fn cmp(&self, other: &Total<T>) -> Ordering {
+        self.0.partial_cmp(&other.0).unwrap()
+    }
+}
 #[allow(dead_code)]
 const MOD: usize = 1000000007;
 #[allow(dead_code)]
@@ -72,8 +92,21 @@ fn to_num(c: char) -> i64 {
 fn main() {
     input!{
         N: usize,
-        v: [usize; N],
+        A: [f64; N],
+    }
+    let mut heap: BinaryHeap<Rev<Total<f64>>> = BinaryHeap::new();
+
+    for a in A {
+        heap.push(Rev(Total(a)));
     }
 
-    
+    for _ in 0..N-1 {
+        let Rev(Total(a)) = heap.pop().unwrap();
+        let Rev(Total(b)) = heap.pop().unwrap();
+        let res = Rev(Total((a + b) / 2f64));
+        heap.push(res);
+    }
+
+    let Rev(Total(ans)) = heap.pop().unwrap();
+    println!("{}", ans);
 }
