@@ -70,7 +70,7 @@ macro_rules! debug {
 }
 
 fn main() {
-    let otogibara = Eratosthenes::new(200);
+    let otogibara = Eratosthenes::new(10000000);
     debug!(otogibara);
     debug!(otogibara.is_prime(101));
     debug!(otogibara.factorization(5376));

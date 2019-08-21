@@ -67,8 +67,17 @@ const MOD: usize = 1000000007;
 fn to_num(c: char) -> i64 {
     c as i64 - 48
 }
-
+macro_rules! printvec {
+    ( $item:expr ) => {
+        for &i in &$item {
+            print!("{} ", i);
+        }
+        println!("");
+    }
+}
 
 fn main() {
-    println!("{}", 1.0f64 / 10f64);
+    let mut tv = vec![0.1, 0.4, 0.5, -0.4, 1.4, -3.9];
+    tv.sort();
+    printvec!(tv);
 }

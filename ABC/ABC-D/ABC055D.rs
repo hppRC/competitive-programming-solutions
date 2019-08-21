@@ -69,27 +69,38 @@ fn to_num(c: char) -> i64 {
 }
 
 
+
+
 fn main() {
     input!{
         N: usize,
         s: chars,
     }
+    let mut flag = false;
 
-    let mut animals: Vec<bool> = s.into_iter().map(|c| if c == 'o' {false} else {true}).collect();
+    let animals: Vec<bool> = s.into_iter().map(|c| if c == 'o' {false} else {true}).collect();
     let mut ans: Vec<Vec<bool>> = vec![vec![false, false], vec![false, true], vec![true, false], vec![true, true]];
 
     for res in ans.iter_mut() {
-        for i in 2..N {
-            let prev = res[i-2];
-            let now = res[i-1];
+        for i in 1..N-1 {
+            let prev = res[i-1];
+            let now = res[i];
             //今見ているところの一つ前 ^ 現在のiから得た情報 で次が確定する.
             //現在のiの暫定が羊なら0で反転させず,狼なら反転
             res.push(prev ^ animals[i] ^ now);
         }
-        if res[N-1] ^ animals[0] ^ res[0] == res[1] {
-            println!("{:?}", res);
+        if res[N-2] ^ animals[N-1] ^ res[N-1] == res[0]  && res[N-1] ^ animals[0] ^ res[0] == res[1] {
+            flag = true;
+            for &mut c in res.into_iter() {
+                print!("{}", if c {"W"} else {"S"});
+            }
+            println!("");
+            break;
         }
     }
 
+    if !flag {
+        println!("-1");
+    }
 
 }
