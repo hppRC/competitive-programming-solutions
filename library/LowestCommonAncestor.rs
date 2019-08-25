@@ -4,8 +4,10 @@ struct LowestCommonAncestor {
     parent: Vec<Vec<Option<usize>>>,
     depth: Vec<usize>,
 }
+#[allow(dead_code)]
 impl LowestCommonAncestor {
-    fn new(n: usize, edges: &[(usize, usize)]) -> Self {
+    fn new(n: usize, edges: &[(usize, usize)]) -> Self
+    {
         let mut g = vec![vec![]; n];
         for &(a, b) in edges.into_iter() {
             g[a].push(b);
@@ -14,13 +16,7 @@ impl LowestCommonAncestor {
         let log_n = (1..).find(|i| (1usize << i) > n).unwrap();;
         let mut parent = vec![vec![None; n]; log_n];
         let mut depth = vec![0; n];
-        LowestCommonAncestor::build(
-            n,
-            log_n,
-            &g,
-            &mut parent,
-            &mut depth,
-        );
+        LowestCommonAncestor::build(n, log_n, &g, &mut parent, &mut depth);
         LowestCommonAncestor {
             g: g,
             parent: parent,
@@ -41,7 +37,8 @@ impl LowestCommonAncestor {
                 if parent[k][v] == None {
                     parent[k+1][v] = None;
                 } else {
-                    parent[k+1][v] = parent[k][parent[k][v].unwrap()];
+                    let super_parent = parent[k][v].unwrap();
+                    parent[k+1][v] = parent[k][super_parent];
                 }
             }
         }
@@ -62,7 +59,6 @@ impl LowestCommonAncestor {
             }
         }
     }
-
     fn lca(&self, mut a: usize, mut b: usize) -> usize {
         if self.depth[a] > self.depth[b] {
             std::mem::swap(&mut a, &mut b);
@@ -82,4 +78,11 @@ impl LowestCommonAncestor {
         }
         self.parent[0][a].unwrap()
     }
+    fn dist(&self, a: usize, b: usize) -> usize {
+        self.depth[a] + self.depth[b] - 2 * self.depth[self.lca(a, b)]
+    }
+}
+
+fn main() {
+
 }

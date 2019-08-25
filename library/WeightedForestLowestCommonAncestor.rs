@@ -1,4 +1,3 @@
-
 #[derive(Eq, PartialEq, Clone, Debug)]
 struct WeightedForestLowestCommonAncestor {
     g: Vec<Vec<(usize, usize)>>,
@@ -104,7 +103,6 @@ impl WeightedForestLowestCommonAncestor {
         if a == b {
             return Some(a);
         }
-
         for k in (0..self.parent.len()).rev() {
             if self.parent[k][a] != self.parent[k][b] {
                 a = self.parent[k][a].unwrap();

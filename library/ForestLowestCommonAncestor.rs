@@ -4,8 +4,10 @@ struct ForestLowestCommonAncestor {
     parent: Vec<Vec<Option<usize>>>,
     depth: Vec<usize>,
 }
+#[allow(dead_code)]
 impl ForestLowestCommonAncestor {
-    fn new(n: usize, edges: &[(usize, usize)]) -> Self {
+    fn new(n: usize, edges: &[(usize, usize)]) -> Self
+    {
         let mut g = vec![vec![]; n];
         for &(a, b) in edges.into_iter() {
             g[a].push(b);
@@ -47,7 +49,8 @@ impl ForestLowestCommonAncestor {
                 if parent[k][v] == None {
                     parent[k+1][v] = None;
                 } else {
-                    parent[k+1][v] = parent[k][parent[k][v].unwrap()];
+                    let super_parent = parent[k][v].unwrap();
+                    parent[k+1][v] = parent[k][super_parent];
                 }
             }
         }
@@ -70,7 +73,6 @@ impl ForestLowestCommonAncestor {
             }
         }
     }
-
     fn lca(&self, mut a: usize, mut b: usize) -> Option<usize> {
         if self.depth[a] > self.depth[b] {
             std::mem::swap(&mut a, &mut b);
@@ -81,18 +83,27 @@ impl ForestLowestCommonAncestor {
         if a == b {
             return Some(a);
         }
-
         for k in (0..self.parent.len()).rev() {
             if self.parent[k][a] != self.parent[k][b] {
                 a = self.parent[k][a].unwrap();
                 b = self.parent[k][b].unwrap();
             }
         }
-        if self.parent[0][a] != self.parent[0][b] {
+        if self.parent[0][a] == None && self.parent[0][b] == None {
             None
         } else {
             self.parent[0][a]
         }
     }
+    fn dist(&self, a: usize, b: usize) -> Option<usize> {
+        if let Some(lca) = self.lca(a, b) {
+            Some(self.depth[a] + self.depth[b] - 2 * self.depth[lca])
+        } else {
+            None
+        }
+    }
 }
 
+fn main() {
+
+}
