@@ -77,7 +77,6 @@ macro_rules! printvec {
 }
 
 fn main() {
-    let mut tv = vec![0.1, 0.4, 0.5, -0.4, 1.4, -3.9];
-    tv.sort();
-    printvec!(tv);
+    let mut tv = vec![0, 1, 2, 3, 4];
+    println!("{}", tv.pop().unwrap());
 }

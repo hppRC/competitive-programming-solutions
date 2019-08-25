@@ -107,84 +107,20 @@ fn comb(n: usize, r: usize) -> usize {
 
 fn main() {
     input!{
-        N: usize, M: usize,
-        ab: [(usize1, usize1); M],
+        M: usize, D: usize,
     }
 
-    let v1 = (0..N/2).collect::<Vec<usize>>();
-    let v2 = (N/2..N).collect::<Vec<usize>>();
+    let mut ans = 0;
 
-    let v1l = v1.len();
-    let v2l = v2.len();
+    for i in 1..M+1 {
+        for j in 1..D+1 {
+            let d1 = j % 10;
+            let d2 = j / 10;
 
-    let mut independent1: Vec<bool> = vec![true; 1 << v1l];
-
-    for &(a, b) in &ab {
-        if a < v1l && b < v1l {
-            independent1[(1 << a) | (1 << b)] = false;
-        }
-    }
-
-    for i in 0..(1 << v1l) {
-        if !independent1[i] {
-            for j in 0..v1l {
-                independent1[i | (1 << j)] = false;
+            if d1 >=2 && d2 >= 2 && d1 * d2 == i {
+                ans += 1;
             }
         }
     }
-    //v2すべてのbitを立てつつv2の頂点数分のvectorを確保
-    let mut set: Vec<usize> = vec![(1 << v2l) - 1; 1 << v1l];
-
-    for &(a, b) in &ab {
-        if a < v1l && b >= v1l {
-            set[1 << a] &= !(1 << (b - v1l));
-        } else if a >= v1l && b < v1l {
-            set[1 << b] &= !(1 << (a - v1l));
-        }
-    }
-
-    for i in 0..(1 << v1l) {
-        for j in 0..v1l {
-            set[i | (1 << j)] = set[i] & set[1 << j];
-        }
-    }
-
-    let mut independent2: Vec<bool> = vec![true; 1 << v2l];
-
-    for &(a, b) in &ab {
-        if a >= v1l && b >= v1l {
-            independent2[(1 << (a - v1l)) | (1 << (b - v1l))] = false;
-        }
-    }
-
-    for i in 0..(1 << v2l) {
-        if !independent2[i] {
-            for j in 0..v2l {
-                independent2[i | (1 << j)] = false;
-            }
-        }
-    }
-
-
-    let mut dp: Vec<usize> = vec![0; 1 << v2l];
-
-    for i in 0..(1 << v2l) {
-        if independent2[i] {
-            dp[i] = i.count_ones() as usize;
-        }
-    }
-
-    for i in 0..(1 << v2l) {
-        for j in 0..v2l {
-            dp[i | (1 << j)] = max(dp[i | (1 << j)], dp[i]);
-        }
-    }
-
-    let ans = independent1.into_iter()
-        .enumerate()
-        .filter_map(|(i, x)| if x {Some(i)} else {None})
-        .map(|i| i.count_ones() as usize + dp[set[i]])
-        .max()
-        .unwrap();
     println!("{}", ans);
 }

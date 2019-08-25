@@ -107,84 +107,36 @@ fn comb(n: usize, r: usize) -> usize {
 
 fn main() {
     input!{
-        N: usize, M: usize,
-        ab: [(usize1, usize1); M],
+        N: usize, K: usize,
+        A: [usize; N],
     }
 
-    let v1 = (0..N/2).collect::<Vec<usize>>();
-    let v2 = (N/2..N).collect::<Vec<usize>>();
+    let mut inner = vec![0; N];
 
-    let v1l = v1.len();
-    let v2l = v2.len();
-
-    let mut independent1: Vec<bool> = vec![true; 1 << v1l];
-
-    for &(a, b) in &ab {
-        if a < v1l && b < v1l {
-            independent1[(1 << a) | (1 << b)] = false;
-        }
-    }
-
-    for i in 0..(1 << v1l) {
-        if !independent1[i] {
-            for j in 0..v1l {
-                independent1[i | (1 << j)] = false;
-            }
-        }
-    }
-    //v2すべてのbitを立てつつv2の頂点数分のvectorを確保
-    let mut set: Vec<usize> = vec![(1 << v2l) - 1; 1 << v1l];
-
-    for &(a, b) in &ab {
-        if a < v1l && b >= v1l {
-            set[1 << a] &= !(1 << (b - v1l));
-        } else if a >= v1l && b < v1l {
-            set[1 << b] &= !(1 << (a - v1l));
-        }
-    }
-
-    for i in 0..(1 << v1l) {
-        for j in 0..v1l {
-            set[i | (1 << j)] = set[i] & set[1 << j];
-        }
-    }
-
-    let mut independent2: Vec<bool> = vec![true; 1 << v2l];
-
-    for &(a, b) in &ab {
-        if a >= v1l && b >= v1l {
-            independent2[(1 << (a - v1l)) | (1 << (b - v1l))] = false;
-        }
-    }
-
-    for i in 0..(1 << v2l) {
-        if !independent2[i] {
-            for j in 0..v2l {
-                independent2[i | (1 << j)] = false;
+    for i in 0..N {
+        for j in 0..N {
+            if A[i] > A[j] {
+                inner[i] += 1;
             }
         }
     }
 
+    let mut right = vec![0; N];
 
-    let mut dp: Vec<usize> = vec![0; 1 << v2l];
-
-    for i in 0..(1 << v2l) {
-        if independent2[i] {
-            dp[i] = i.count_ones() as usize;
+    for i in 0..N {
+        for j in i..N {
+            if A[i] > A[j] {
+                right[i] += 1;
+            }
         }
     }
 
-    for i in 0..(1 << v2l) {
-        for j in 0..v2l {
-            dp[i | (1 << j)] = max(dp[i | (1 << j)], dp[i]);
-        }
+    let mut ans = 0;
+
+    for i in 0..N {
+        ans += (((K * (K - 1) / 2 ) % MOD) * inner[i] + K * right[i]) % MOD;
+        ans %= MOD;
     }
 
-    let ans = independent1.into_iter()
-        .enumerate()
-        .filter_map(|(i, x)| if x {Some(i)} else {None})
-        .map(|i| i.count_ones() as usize + dp[set[i]])
-        .max()
-        .unwrap();
     println!("{}", ans);
 }

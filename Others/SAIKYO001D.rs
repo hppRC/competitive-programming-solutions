@@ -103,88 +103,94 @@ fn comb(n: usize, r: usize) -> usize {
         (1..r+1).into_iter().fold(1, |acc, i| acc * (n - r + i) / i)
     }
 }
+trait CharUtils {
+    fn to_num(self) -> usize;
+}
+impl CharUtils for char {
+    fn to_num(self) -> usize {
+        self as usize
+    }
+}
+trait UsizeUtils {
+    fn sqrt_floor(self) -> usize;
+    fn sqrt_ceil(self) -> usize;
+    fn factors(self) -> HashMap<usize, usize>;
+    fn digits(self) -> usize;
+    fn bit_length(self) -> usize;
+}
+impl UsizeUtils for usize {
+    fn sqrt_floor(self) -> usize {
+        (self as f64).sqrt() as usize
+    }
+    fn sqrt_ceil(self) -> usize {
+        let tmp = (self as f64).sqrt() as usize;
+        if tmp * tmp == self {
+            tmp
+        } else {
+            tmp + 1
+        }
+    }
+    fn factors(self) -> HashMap<usize, usize> {
+        let mut facs: HashMap<usize, usize> = HashMap::new();
+        let mut n = self;
+        let mut a = 2;
+        while n >= a*a {
+            if n % a == 0{
+                n /= a;
+                *facs.entry(a).or_insert(0) += 1;
+            } else {
+                a += 1;
+            }
+        }
+        *facs.entry(n).or_insert(0) += 1;
+        facs
+    }
+    fn digits(self) -> usize {
+        (self as f64).log10() as usize + 1
+    }
+    fn bit_length(self) -> usize {
+        let mut ret = 0;
+        let mut n = self;
+        while n > 0 {
+            ret += 1;
+            n >>= 1;
+        }
+        ret
+    }
+}
+trait VecUtils<T> {
+    fn transpose(&self) -> Vec<Vec<&T>>;
+}
+impl<T> VecUtils<T> for Vec<Vec<T>> {
+    fn transpose(&self) -> Vec<Vec<&T>> {
+        (0..self[0].len()).map(|j|  (0..self.len()).map(|i| &self[i][j]).collect::<Vec<&T>>()).collect::<Vec<Vec<&T>>>()
+    }
+}
 
 
 fn main() {
     input!{
-        N: usize, M: usize,
-        ab: [(usize1, usize1); M],
+        N: usize,
     }
+    let bit = N.bit_length();
+    let mut v = vec![vec![0; N]; N];
 
-    let v1 = (0..N/2).collect::<Vec<usize>>();
-    let v2 = (N/2..N).collect::<Vec<usize>>();
-
-    let v1l = v1.len();
-    let v2l = v2.len();
-
-    let mut independent1: Vec<bool> = vec![true; 1 << v1l];
-
-    for &(a, b) in &ab {
-        if a < v1l && b < v1l {
-            independent1[(1 << a) | (1 << b)] = false;
-        }
-    }
-
-    for i in 0..(1 << v1l) {
-        if !independent1[i] {
-            for j in 0..v1l {
-                independent1[i | (1 << j)] = false;
-            }
-        }
-    }
-    //v2すべてのbitを立てつつv2の頂点数分のvectorを確保
-    let mut set: Vec<usize> = vec![(1 << v2l) - 1; 1 << v1l];
-
-    for &(a, b) in &ab {
-        if a < v1l && b >= v1l {
-            set[1 << a] &= !(1 << (b - v1l));
-        } else if a >= v1l && b < v1l {
-            set[1 << b] &= !(1 << (a - v1l));
-        }
-    }
-
-    for i in 0..(1 << v1l) {
-        for j in 0..v1l {
-            set[i | (1 << j)] = set[i] & set[1 << j];
-        }
-    }
-
-    let mut independent2: Vec<bool> = vec![true; 1 << v2l];
-
-    for &(a, b) in &ab {
-        if a >= v1l && b >= v1l {
-            independent2[(1 << (a - v1l)) | (1 << (b - v1l))] = false;
-        }
-    }
-
-    for i in 0..(1 << v2l) {
-        if !independent2[i] {
-            for j in 0..v2l {
-                independent2[i | (1 << j)] = false;
+    for i in 0..N {
+        for j in i+1..N {
+            let k = i ^ j;
+            for l in 0..bit {
+                if (k >> l) & 1 == 1 {
+                    v[i][j] = l + 1;
+                    break;
+                }
             }
         }
     }
 
-
-    let mut dp: Vec<usize> = vec![0; 1 << v2l];
-
-    for i in 0..(1 << v2l) {
-        if independent2[i] {
-            dp[i] = i.count_ones() as usize;
+    for i in 0..N-1 {
+        for j in i+1..N {
+            print!("{} ", v[i][j]);
         }
+        println!("");
     }
-
-    for i in 0..(1 << v2l) {
-        for j in 0..v2l {
-            dp[i | (1 << j)] = max(dp[i | (1 << j)], dp[i]);
-        }
-    }
-
-    let ans = independent1.into_iter()
-        .enumerate()
-        .filter_map(|(i, x)| if x {Some(i)} else {None})
-        .map(|i| i.count_ones() as usize + dp[set[i]])
-        .max()
-        .unwrap();
-    println!("{}", ans);
 }

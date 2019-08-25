@@ -93,7 +93,7 @@ impl<T: PartialOrd> Ord for Total<T> {
 const MOD: usize = 1000000007;
 #[allow(dead_code)]
 fn factorial(n: usize) -> usize {
-    (1..n+1).into_iter().fold(1, |acc, i| acc * i)
+    (1..n+1).into_iter().fold(1, |acc, i| acc * i % MOD)
 }
 #[allow(dead_code)]
 fn comb(n: usize, r: usize) -> usize {
@@ -104,87 +104,74 @@ fn comb(n: usize, r: usize) -> usize {
     }
 }
 
-
 fn main() {
     input!{
-        N: usize, M: usize,
-        ab: [(usize1, usize1); M],
+        N: usize,
+        S: chars,
     }
 
-    let v1 = (0..N/2).collect::<Vec<usize>>();
-    let v2 = (N/2..N).collect::<Vec<usize>>();
+    let mut ans: isize = (factorial(N) % MOD) as isize;
+    let mut lstack: isize = 0;
 
-    let v1l = v1.len();
-    let v2l = v2.len();
-
-    let mut independent1: Vec<bool> = vec![true; 1 << v1l];
-
-    for &(a, b) in &ab {
-        if a < v1l && b < v1l {
-            independent1[(1 << a) | (1 << b)] = false;
+    for i in 0..2*N {
+        if (lstack % 2 == 1 && S[i] == 'B') || (lstack % 2 == 0 && S[i] == 'W') {
+            ans *= lstack;
+            ans %= MOD as isize;
+            lstack -= 1;
+        } else {
+            lstack += 1;
         }
     }
 
-    for i in 0..(1 << v1l) {
-        if !independent1[i] {
-            for j in 0..v1l {
-                independent1[i | (1 << j)] = false;
+    if lstack == 0 {
+        println!("{}", ans);
+    } else {
+        println!("0");
+    }
+
+
+/*
+    if S[0] == 'W' || S[2*N-1] == 'W' {
+        println!("0");
+    } else {
+        let mut lr = vec![true; 2*N];
+        let mut l = 1;
+        let mut r = 0;
+
+        for i in 0..2*N-1 {
+            if S[i] == S[i+1] {
+                lr[i+1] = !lr[i];
+            } else {
+                lr[i+1] = lr[i];
+            }
+            if lr[i+1] {
+                l += 1;
+            } else {
+                r += 1;
             }
         }
-    }
-    //v2すべてのbitを立てつつv2の頂点数分のvectorを確保
-    let mut set: Vec<usize> = vec![(1 << v2l) - 1; 1 << v1l];
 
-    for &(a, b) in &ab {
-        if a < v1l && b >= v1l {
-            set[1 << a] &= !(1 << (b - v1l));
-        } else if a >= v1l && b < v1l {
-            set[1 << b] &= !(1 << (a - v1l));
-        }
-    }
-
-    for i in 0..(1 << v1l) {
-        for j in 0..v1l {
-            set[i | (1 << j)] = set[i] & set[1 << j];
-        }
-    }
-
-    let mut independent2: Vec<bool> = vec![true; 1 << v2l];
-
-    for &(a, b) in &ab {
-        if a >= v1l && b >= v1l {
-            independent2[(1 << (a - v1l)) | (1 << (b - v1l))] = false;
-        }
-    }
-
-    for i in 0..(1 << v2l) {
-        if !independent2[i] {
-            for j in 0..v2l {
-                independent2[i | (1 << j)] = false;
+        if l == r {
+            let mut ans = 1;
+            let mut lstack = 0;
+            for i in 0..2*N {
+                if lr[i] {
+                    lstack += 1;
+                } else {
+                    ans *= lstack % MOD;
+                    ans %= MOD;
+                    lstack -= 1;
+                }
             }
+
+            println!("{}", ans * factorial(N) % MOD);
+
+
+        } else {
+            println!("0");
         }
     }
 
+*/
 
-    let mut dp: Vec<usize> = vec![0; 1 << v2l];
-
-    for i in 0..(1 << v2l) {
-        if independent2[i] {
-            dp[i] = i.count_ones() as usize;
-        }
-    }
-
-    for i in 0..(1 << v2l) {
-        for j in 0..v2l {
-            dp[i | (1 << j)] = max(dp[i | (1 << j)], dp[i]);
-        }
-    }
-
-    let ans = independent1.into_iter()
-        .enumerate()
-        .filter_map(|(i, x)| if x {Some(i)} else {None})
-        .map(|i| i.count_ones() as usize + dp[set[i]])
-        .max()
-        .unwrap();
-    println!("{}", ans);
 }
