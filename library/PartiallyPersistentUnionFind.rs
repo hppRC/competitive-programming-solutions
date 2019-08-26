@@ -1,21 +1,17 @@
-use search::BinarySearch;
-use std::mem::swap;
-
-
 struct PartiallyPersistentUnionFindTree {
-    nodes: Vec<PersistentNode>,
-    version: Version,
+  nodes: Vec<PersistentNode>,
+  version: Version,
 }
 
-    type Version = usize;
+type Version = usize;
 
 #[derive(Clone, Copy)]
 enum Node {
-    Root { node_count: usize },
-    Descendant { parent_index: usize },
+Root { node_count: usize },
+Descendant { parent_index: usize },
 }
 
-    #[derive(Clone)]
+#[derive(Clone)]
     struct PersistentNode {
       node: Node,
       parent_updated_version: Option<Version>,
@@ -54,7 +50,7 @@ enum Node {
           (Node::Root { node_count: l_node_count }, Node::Root { node_count: r_node_count }) => {
             let node_count = l_node_count + r_node_count;
             if l_node_count < r_node_count {
-              swap(&mut l_root_index, &mut r_root_index);
+              std::mem::swap(&mut l_root_index, &mut r_root_index);
             }
             self.nodes[l_root_index].node = Node::Root { node_count: node_count };
             self.nodes[l_root_index].node_count_history.push((self.version, node_count));
@@ -90,7 +86,7 @@ enum Node {
         assert!(version <= self.version());
         debug_assert!(index < self.len());
         let node_count_history = self.nodes[index].node_count_history.as_slice();
-        match BinarySearch::binary_search(node_count_history, |&(updated_version, _)| updated_version <= version) {
+        match search::BinarySearch::binary_search(node_count_history, |&(updated_version, _)| updated_version <= version) {
           Some(i) => node_count_history[i].1,
           None => 1,
         }

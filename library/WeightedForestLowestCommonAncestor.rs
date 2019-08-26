@@ -160,6 +160,30 @@ impl WeightedForestLowestCommonAncestor {
         }
     }
 }
+#[allow(dead_code)]
+struct WeightedMaxForestLowestCommonAncestor;
+#[allow(dead_code)]
+impl WeightedMaxForestLowestCommonAncestor {
+    fn new(n: usize, edges: &[(usize, usize, usize)]) -> WeightedForestLowestCommonAncestor {
+        WeightedForestLowestCommonAncestor::new(n, &edges, |x, y| { std::cmp::max(x, y) })
+    }
+}
+#[allow(dead_code)]
+struct WeightedMinForestLowestCommonAncestor;
+#[allow(dead_code)]
+impl WeightedMinForestLowestCommonAncestor {
+    fn new(n: usize, edges: &[(usize, usize, usize)]) -> WeightedForestLowestCommonAncestor {
+        WeightedForestLowestCommonAncestor::new(n, &edges, |x, y| { std::cmp::min(x, y) })
+    }
+}
+#[allow(dead_code)]
+struct WeightedDistForestLowestCommonAncestor;
+#[allow(dead_code)]
+impl WeightedDistForestLowestCommonAncestor {
+    fn new(n: usize, edges: &[(usize, usize, usize)]) -> WeightedForestLowestCommonAncestor {
+        WeightedForestLowestCommonAncestor::new(n, &edges, |x, y| { x + y })
+    }
+}
 
 fn main() {
     
