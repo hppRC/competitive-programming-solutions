@@ -95,9 +95,51 @@ const MOD: usize = 1000000007;
 
 fn main() {
     input!{
-        n: usize,
-        A: [isize; n],
+        N: usize,
+        A: [[usize1; N-1]; N],
     }
-    let mut sumi: isize = A[i];
-    let mut sign: bool = 
+    let mut pos = vec![0; N];
+    let mut edge: Vec<(usize, usize)> = vec![];
+    let mut finish: Vec<bool> = vec![false; N];
+    let mut fin_cnt = 0;
+    let mut ans = 0;
+    let mut can_reach = true;
+
+    loop {
+        for i in 0..N {
+            if !finish[i] {
+                if A[i][pos[i]] > i && A[A[i][pos[i]]][pos[A[i][pos[i]]]] == i {
+                    edge.push((i, A[i][pos[i]]));
+                }
+            }
+        }
+
+        if fin_cnt != N && edge.len() == 0 {
+            can_reach = false;
+            break;
+        }
+        while let Some((u, v)) = edge.pop() {
+            pos[u] += 1;
+            pos[v] += 1;
+            if pos[u] >= N-1 {
+                finish[u] = true;
+                fin_cnt += 1;
+            }
+            if pos[v] >= N-1 {
+                finish[v] = true;
+                fin_cnt += 1;
+            }
+        }
+
+        ans += 1;
+        if fin_cnt == N {
+            break
+        }
+    }
+
+    if can_reach {
+        println!("{}", ans);
+    } else {
+        println!("-1");
+    }
 }

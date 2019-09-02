@@ -95,9 +95,7 @@ const MOD: usize = 1000000007;
 
 fn main() {
     input!{
-        n: usize,
-        A: [isize; n],
+        N: usize,
     }
-    let mut sumi: isize = A[i];
-    let mut sign: bool = 
+    println!("{}", N*(N-1)/2);
 }

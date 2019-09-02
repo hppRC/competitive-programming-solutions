@@ -95,9 +95,19 @@ const MOD: usize = 1000000007;
 
 fn main() {
     input!{
-        n: usize,
-        A: [isize; n],
+        N: usize,
+        H: [usize; N],
     }
-    let mut sumi: isize = A[i];
-    let mut sign: bool = 
+    let mut ans = 0;
+    let mut tmp = 0;
+    for i in 0..N-1 {
+        if H[i] >= H[i+1] {
+            tmp += 1;
+        } else {
+            ans = max(ans, tmp);
+            tmp = 0;
+        }
+    }
+    ans = max(ans, tmp);
+    println!("{}", ans);
 }

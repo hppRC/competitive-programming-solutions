@@ -95,9 +95,13 @@ const MOD: usize = 1000000007;
 
 fn main() {
     input!{
-        n: usize,
-        A: [isize; n],
+        A: usize, B: usize,
     }
-    let mut sumi: isize = A[i];
-    let mut sign: bool = 
+    let mut ans = 0;
+    let mut tmp = 1;
+    while tmp < B {
+        ans += 1;
+        tmp += A-1;
+    }
+    println!("{}", ans);
 }

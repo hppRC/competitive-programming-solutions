@@ -95,9 +95,52 @@ const MOD: usize = 1000000007;
 
 fn main() {
     input!{
-        n: usize,
-        A: [isize; n],
+        N: usize,
+        xy: [(isize, isize); N],
     }
-    let mut sumi: isize = A[i];
-    let mut sign: bool = 
+    let mut dir: Vec<(isize, isize)> = vec![(0,0); 8];
+
+    for &(x, y) in &xy {
+        if x == 0 {
+            if y == 0 {
+                continue;
+            } else if y > 0 {
+                dir[0] = (dir[0].0 + x, dir[0].1 + y);
+            } else {
+                dir[4] = (dir[4].0 + x, dir[4].1 + y);
+            }
+        } else if y == 0 {
+            if x == 0 {
+                continue;
+            } else if x > 0 {
+                dir[2] = (dir[2].0 + x, dir[2].1 + y);
+            } else {
+                dir[6] = (dir[6].0 + x, dir[6].1 + y);
+            }
+        } else {
+            if x > 0 && y > 0 {
+                dir[1] = (dir[1].0 + x, dir[1].1 + y);
+            } else if x > 0 && y < 0 {
+                dir[3] = (dir[3].0 + x, dir[3].1 + y);
+            } else if x < 0 && y < 0 {
+                dir[5] = (dir[5].0 + x, dir[5].1 + y);
+            } else {
+                dir[7] = (dir[7].0 + x, dir[7].1 + y);
+            }
+        }
+    }
+
+    let mut ans = 0;
+
+    for i in 0..(1<<8) {
+        let mut tmp = (0, 0);
+        let mut bit = i;
+        for j in 0..8 {
+            if (bit >> j) & 1 == 1 {
+                tmp = (tmp.0 + dir[j].0, tmp.1 + dir[j].1);
+            }
+        }
+        ans = max(ans, tmp.0*tmp.0 + tmp.1*tmp.1);
+    }
+    println!("{}", (ans as f64).sqrt());
 }
