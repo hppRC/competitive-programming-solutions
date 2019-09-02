@@ -104,4 +104,5 @@ fn main() {
         tmp += A-1;
     }
     println!("{}", ans);
+
 }
