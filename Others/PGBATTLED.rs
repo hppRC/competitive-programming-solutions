@@ -95,14 +95,25 @@ const MOD: usize = 1000000007;
 
 fn main() {
     input!{
-        N: usize, K: usize,
-        S: chars,
+        N: usize,
+        xyz: [(usize, usize, usize); N],
     }
-    let mut tmp = 0;
-    for i in 0..N-1 {
-        if S[i] == S[i+1] {
-            tmp += 1;
+
+    let mut xyz = xyz;
+    xyz.sort();
+
+    println!("{:?}", xyz);
+
+    let mut ans = vec![(MOD,MOD,MOD); 8];
+    println!("{:?}", ans);
+
+    for (x, y, z) in xyz {
+        for i in 0..8 {
+            if ans[i].0 > x && ans[i].1 > y && ans[i].2 > z {
+                ans[i] = (x, y, z);
+                println!("Yes");
+                break;
+            }
         }
     }
-    println!("{}", min(tmp + 2 * K, N - 1));
 }

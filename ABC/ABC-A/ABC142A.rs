@@ -95,14 +95,15 @@ const MOD: usize = 1000000007;
 
 fn main() {
     input!{
-        N: usize, K: usize,
-        S: chars,
+        N: usize,
     }
-    let mut tmp = 0;
-    for i in 0..N-1 {
-        if S[i] == S[i+1] {
-            tmp += 1;
-        }
+
+    if N == 1 {
+        println!("1");
+    } else if N % 2 == 0 {
+        println!("0.5");
+    } else {
+        println!("{}", ((N / 2) + 1) as f64 / (N as f64));
     }
-    println!("{}", min(tmp + 2 * K, N - 1));
+
 }

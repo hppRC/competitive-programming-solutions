@@ -96,13 +96,8 @@ const MOD: usize = 1000000007;
 fn main() {
     input!{
         N: usize, K: usize,
-        S: chars,
+        h: [usize; N],
     }
-    let mut tmp = 0;
-    for i in 0..N-1 {
-        if S[i] == S[i+1] {
-            tmp += 1;
-        }
-    }
-    println!("{}", min(tmp + 2 * K, N - 1));
+
+    println!("{}", h.into_iter().fold(0, |acc, hi| acc + if hi >= K {1} else {0}));
 }

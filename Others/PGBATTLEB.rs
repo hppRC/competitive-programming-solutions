@@ -92,17 +92,69 @@ impl<T: PartialOrd> Ord for Total<T> {
 #[allow(dead_code)]
 const MOD: usize = 1000000007;
 
+fn extgcd(a: i64, b: i64) -> (i64, i64, i64) {
+    if b == 0 {
+        (a, 1, 0)
+    } else {
+        let (gcd, x, y) = extgcd(b, a % b);
+        (gcd, y, x - (a / b) * y)
+    }
+}
 
 fn main() {
     input!{
-        N: usize, K: usize,
-        S: chars,
+        N: i64, M: i64,
+        A: i64, B: i64, C: i64,
     }
-    let mut tmp = 0;
-    for i in 0..N-1 {
-        if S[i] == S[i+1] {
-            tmp += 1;
+    let (gcd, x, y) = extgcd(B-A, C-A);
+
+    let mut ans = (-1, -1, -1);
+    let z = M - A * N;
+
+    if gcd == 0 {
+        if A == B && A == C {
+
+        } else if A == B {
+            let (tmp, u, v) = extgcd(A, C);
+            if z % gcd == 0 {
+                let scale = z / gcd;
+
+                let k = (y * scale - 1) / (C - A) + 1;
+                let b = (C - A) * k - y * scale;
+                let c = - (B - A) * k - x * scale;
+                println!("{} 0 {}", b, c);
+
+            } else {
+                println!("{:?}", ans);
+            }
+        } else {
+            let (tmp, u, v) = extgcd(A, B);
+            if z % gcd == 0 {
+                let scale = z / gcd;
+
+                let k = (y * scale - 1) / (C - A) + 1;
+                let b = (C - A) * k - y * scale;
+                let c = - (B - A) * k - x * scale;
+                println!("{} {} 0", b, c);
+
+            } else {
+                println!("{:?}", ans);
+            }
+        }
+    } else {
+        if z % gcd == 0 {
+            let scale = z / gcd;
+
+            let k = (y * scale - 1) / (C - A) + 1;
+            println!("{} {} {} {}", scale, z, gcd, k);
+            let b = (C - A) * k - y * scale;
+            let c = - (B - A) * k - x * scale;
+
+            println!("{} {} {}", N - b -c, b, c);
+
+        } else {
+            println!("{:?}", ans);
         }
     }
-    println!("{}", min(tmp + 2 * K, N - 1));
+
 }

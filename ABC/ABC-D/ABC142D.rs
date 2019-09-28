@@ -92,17 +92,77 @@ impl<T: PartialOrd> Ord for Total<T> {
 #[allow(dead_code)]
 const MOD: usize = 1000000007;
 
+trait CharUtils {
+    fn to_num(self) -> usize;
+}
+impl CharUtils for char {
+    fn to_num(self) -> usize {
+        self as usize
+    }
+}
+trait UsizeUtils {
+    fn sqrt_floor(self) -> usize;
+    fn sqrt_ceil(self) -> usize;
+    fn factors(self) -> HashMap<usize, usize>;
+    fn digits(self) -> usize;
+    fn bit_length(self) -> usize;
+}
+impl UsizeUtils for usize {
+    fn sqrt_floor(self) -> usize {
+        (self as f64).sqrt() as usize
+    }
+    fn sqrt_ceil(self) -> usize {
+        let tmp = (self as f64).sqrt() as usize;
+        if tmp * tmp == self {
+            tmp
+        } else {
+            tmp + 1
+        }
+    }
+    fn factors(self) -> HashMap<usize, usize> {
+        let mut facs: HashMap<usize, usize> = HashMap::new();
+        let mut n = self;
+        let mut a = 2;
+        while n >= a*a {
+            if n % a == 0{
+                n /= a;
+                *facs.entry(a).or_insert(0) += 1;
+            } else {
+                a += 1;
+            }
+        }
+        *facs.entry(n).or_insert(0) += 1;
+        facs
+    }
+    fn digits(self) -> usize {
+        (self as f64).log10() as usize + 1
+    }
+fn bit_length(self) -> usize {
+    let mut ret = 0;
+    let mut n = self;
+    while n > 0 {
+        ret += 1;
+        n >>= 1;
+    }
+    ret
+}
+}
+trait VecUtils<T> {
+    fn transpose(&self) -> Vec<Vec<&T>>;
+}
+impl<T> VecUtils<T> for Vec<Vec<T>> {
+    fn transpose(&self) -> Vec<Vec<&T>> {
+        (0..self[0].len()).map(|j|  (0..self.len()).map(|i| &self[i][j]).collect::<Vec<&T>>()).collect::<Vec<Vec<&T>>>()
+    }
+}
 
 fn main() {
     input!{
-        N: usize, K: usize,
-        S: chars,
+        A: usize, B: usize
     }
-    let mut tmp = 0;
-    for i in 0..N-1 {
-        if S[i] == S[i+1] {
-            tmp += 1;
-        }
-    }
-    println!("{}", min(tmp + 2 * K, N - 1));
+    let Af = A.factors();
+    let Bf = B.factors();
+
+    let ans = Af.keys().into_iter().fold(if A == 1 && B == 1 {0} else {1}, |acc, k| acc + if Bf.contains_key(k) {1} else {0});
+    println!("{}", ans);
 }

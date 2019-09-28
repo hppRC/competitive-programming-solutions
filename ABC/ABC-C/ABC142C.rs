@@ -95,14 +95,16 @@ const MOD: usize = 1000000007;
 
 fn main() {
     input!{
-        N: usize, K: usize,
-        S: chars,
+        N: usize,
+        A: [usize; N],
     }
-    let mut tmp = 0;
-    for i in 0..N-1 {
-        if S[i] == S[i+1] {
-            tmp += 1;
-        }
+
+    let mut ans: Vec<(usize, usize)> = A.into_iter().enumerate().map(|(i, ai)| (i, ai)).collect();
+    ans.sort_by_key(|k| k.1);
+
+    for (i, ai) in ans {
+        print!("{} ", i + 1);
     }
-    println!("{}", min(tmp + 2 * K, N - 1));
+    println!("");
+
 }

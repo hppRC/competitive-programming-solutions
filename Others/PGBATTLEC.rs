@@ -93,16 +93,55 @@ impl<T: PartialOrd> Ord for Total<T> {
 const MOD: usize = 1000000007;
 
 
-fn main() {
-    input!{
-        N: usize, K: usize,
-        S: chars,
-    }
-    let mut tmp = 0;
-    for i in 0..N-1 {
-        if S[i] == S[i+1] {
-            tmp += 1;
+#[derive(Eq, PartialEq, Clone, Debug)]
+struct Dijkstra {
+    dist: Vec<isize>,
+    neighbors: Vec<Vec<(usize, isize)>>,
+    n: usize,
+}
+#[allow(dead_code)]
+impl Dijkstra {
+    fn new(n: usize, edges: &Vec<(usize, usize, isize)>, s: usize) -> Self {
+        let inf: isize = 1000000007;
+        let mut dist: Vec<isize> = vec![inf; n];
+        let mut neighbors: Vec<Vec<(usize, isize)>> = vec![vec![]; n];
+        let mut heap: BinaryHeap<Rev<(usize, isize)>> = BinaryHeap::new();
+        for &(a, b, c) in edges.into_iter() {
+            neighbors[a].push((b, c));
+        }
+        dist[s] = 0;
+        heap.push(Rev((s, 0)));
+        while !heap.is_empty() {
+            let Rev((v, d)) = heap.pop().unwrap();
+            if dist[v] < d {
+                continue;
+            }
+            for &(u, cost) in &neighbors[v] {
+                if dist[u] > dist[v] + cost {
+                    dist[u] = dist[v] + cost;
+                    heap.push(Rev((u, cost)));
+                }
+            }
+        }
+        Dijkstra {
+            dist: dist,
+            neighbors: neighbors,
+            n: n,
         }
     }
-    println!("{}", min(tmp + 2 * K, N - 1));
+}
+
+fn main() {
+    input!{
+        N: usize, M: usize,
+        AB: [(usize, usize); M],
+    }
+
+    let edges: Vec<(usize, usize, isize)> = AB.into_iter().map(|(a,b)| (b,a,1)).collect();
+
+    let dk = Dijkstra::new(N+1, &edges, 0);
+
+    for i in 1..N+1 {
+        println!("{}", if dk.dist[i] <= 3 {"Yes"} else {"No"});
+    }
 }
