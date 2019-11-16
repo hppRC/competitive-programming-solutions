@@ -108,15 +108,15 @@ fn main() {
 
     let mut d = vec![-1;N];
     d[a] = 0;
-    let mut q = vec![];
-    q.push(a);
+    let mut q = VecDeque::new();
+    q.push_back(a);
 
     while q.len() > 0 {
-        let u = q.pop().unwrap();
+        let u = q.pop_front().unwrap();
         for &v in &edges[u] {
             if d[v] == -1 {
                 d[v] = d[u] + 1;
-                q.push(v);
+                q.push_back(v);
             }
         }
     }
@@ -126,6 +126,7 @@ fn main() {
     let mut q = VecDeque::new();
     q.push_back(a);
 
+
     while q.len() > 0 {
         let u = q.pop_front().unwrap();
         for &v in &edges[u] {
@@ -134,11 +135,9 @@ fn main() {
                     q.push_back(v);
                 }
                 dsum[v] += dsum[u];
-                dsum[v] %= MOD;
             }
+            dsum[v] %= MOD;
         }
     }
-
     println!("{:?}", dsum[b] % MOD);
-
 }
